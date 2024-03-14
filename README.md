@@ -16,8 +16,8 @@ pip install nextcaptcha-python
 
 ## Usage
 
-To start using the NextCaptcha Python SDK, you first need to obtain your API key (clientKey) from the (
-NextCaptcha)[https://dashboard.nextcaptcha.com] Dashboard. Then, you can create a NextCaptchaAPI instance:
+To start using the NextCaptcha Python SDK, you first need to obtain your API key (clientKey) from the 
+[NextCaptcha](https://dashboard.nextcaptcha.com) Dashboard. Then, you can create a NextCaptchaAPI instance:
 
 ```python
 from nextcaptcha import NextCaptchaAPI
