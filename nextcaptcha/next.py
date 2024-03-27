@@ -1,6 +1,7 @@
-import requests
 import logging
 import time
+
+import requests
 
 logging.basicConfig(level=logging.INFO)
 
@@ -22,8 +23,10 @@ PROCESSING_STATUS = "processing"
 READY_STATUS = "ready"
 FAILED_STATUS = "failed"
 
+
 class TaskBadParametersError(Exception):
     pass
+
 
 class ApiClient:
     HOST = "https://api.nextcaptcha.com"
@@ -68,7 +71,8 @@ class ApiClient:
             if time.time() - start_time > TIMEOUT:
                 return {"errorId": 12, "errorDescription": "Timeout", "status": "failed"}
 
-            resp = self.session.post(url=self.HOST + "/getTaskResult", json={"clientKey": self.client_key, "taskId": task_id})
+            resp = self.session.post(url=self.HOST + "/getTaskResult",
+                                     json={"clientKey": self.client_key, "taskId": task_id})
             if resp.status_code != 200:
                 if self.open_log:
                     logging.error(f"Error: {resp.status_code} {resp.text}")
@@ -84,12 +88,15 @@ class ApiClient:
                 return resp.json()
             time.sleep(1)
 
+
 class NextCaptchaAPI:
     def __init__(self, client_key: str, solft_id: str = "", callback_url: str = "", open_log: bool = True) -> None:
-        logging.info(f"NextCaptchaAPI created with clientKey={client_key} solftId={solft_id} callbackUrl={callback_url}")
+        logging.info(
+            f"NextCaptchaAPI created with clientKey={client_key} solftId={solft_id} callbackUrl={callback_url}")
         self.api = ApiClient(client_key=client_key, solft_id=solft_id, callback_url=callback_url, open_log=open_log)
 
-    def recaptchav2(self, website_url: str, website_key: str, recaptcha_data_s_value: str = "", is_invisible: bool = False, api_domain: str = "") -> dict:
+    def recaptchav2(self, website_url: str, website_key: str, recaptcha_data_s_value: str = "",
+                    is_invisible: bool = False, api_domain: str = "", page_action: str = "") -> dict:
         """
         Solve reCAPTCHA v2 challenge.
 
@@ -107,10 +114,12 @@ class NextCaptchaAPI:
             "recaptchaDataSValue": recaptcha_data_s_value,
             "isInvisible": is_invisible,
             "apiDomain": api_domain,
+            "pageAction": page_action,
         }
         return self.api._send(task)
 
-    def recaptchav2enterprise(self, website_url: str, website_key: str, enterprise_payload: dict = {}, is_invisible: bool = False, api_domain: str = "") -> dict:
+    def recaptchav2enterprise(self, website_url: str, website_key: str, enterprise_payload: dict = {},
+                              is_invisible: bool = False, api_domain: str = "", page_action: str = "") -> dict:
         """
         Solve reCAPTCHA v2 Enterprise challenge.
 
@@ -128,10 +137,13 @@ class NextCaptchaAPI:
             "enterprisePayload": enterprise_payload,
             "isInvisible": is_invisible,
             "apiDomain": api_domain,
+            "pageAction": page_action,
         }
         return self.api._send(task)
 
-    def recaptchav3(self, website_url: str, website_key: str, page_action: str = "", api_domain: str = "", proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "", proxy_password: str = "") -> dict:
+    def recaptchav3(self, website_url: str, website_key: str, page_action: str = "", api_domain: str = "",
+                    proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "",
+                    proxy_password: str = "") -> dict:
         """
         Solve reCAPTCHA v3 challenge.
 
@@ -179,7 +191,9 @@ class NextCaptchaAPI:
         }
         return self.api._send(task)
 
-    def hcaptcha(self, website_url: str, website_key: str, is_invisible: bool = False, enterprise_payload: dict = {}, proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "", proxy_password: str = "") -> dict:
+    def hcaptcha(self, website_url: str, website_key: str, is_invisible: bool = False, enterprise_payload: dict = {},
+                 proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "",
+                 proxy_password: str = "") -> dict:
         """
         Solve hCaptcha challenge.
 
@@ -210,7 +224,9 @@ class NextCaptchaAPI:
             task["proxyPassword"] = proxy_password
         return self.api._send(task)
 
-    def hcaptcha_enterprise(self, website_url: str, website_key: str, enterprise_payload: dict = {}, is_invisible: bool = False, proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "", proxy_password: str = "") -> dict:
+    def hcaptcha_enterprise(self, website_url: str, website_key: str, enterprise_payload: dict = {},
+                            is_invisible: bool = False, proxy_type: str = "", proxy_address: str = "",
+                            proxy_port: int = 0, proxy_login: str = "", proxy_password: str = "") -> dict:
         """
         Solve hCaptcha Enterprise challenge.
 
@@ -239,7 +255,9 @@ class NextCaptchaAPI:
         }
         return self.api._send(task)
 
-    def funcaptcha(self, website_public_key: str, website_url: str = "", data: str = "", proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "", proxy_password: str = "") -> dict:
+    def funcaptcha(self, website_public_key: str, website_url: str = "", data: str = "", proxy_type: str = "",
+                   proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "",
+                   proxy_password: str = "") -> dict:
         """
         Solve FunCaptcha challenge.
 
