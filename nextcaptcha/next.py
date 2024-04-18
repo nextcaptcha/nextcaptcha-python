@@ -39,7 +39,7 @@ class ApiClient:
         self.session = requests.session()
 
     def _get_balance(self) -> str:
-        resp = self.session.get(url=self.HOST + "/getBalance", json={"clientKey": self.client_key})
+        resp = self.session.post(url=self.HOST + "/getBalance", json={"clientKey": self.client_key})
         if resp.status_code != 200:
             if self.open_log:
                 logging.error(f"Error: {resp.status_code} {resp.text}")
