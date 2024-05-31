@@ -9,7 +9,8 @@ RECAPTCHAV2_TYPE = "RecaptchaV2TaskProxyless"
 RECAPTCHAV2_ENTERPRISE_TYPE = "RecaptchaV2EnterpriseTaskProxyless"
 RECAPTCHAV3_PROXYLESS_TYPE = "RecaptchaV3TaskProxyless"
 RECAPTCHAV3_TYPE = "RecaptchaV3Task"
-RECAPTCHA_MOBILE_TYPE = "RecaptchaMobileProxyless"
+RECAPTCHA_MOBILE_PROXYLESS_TYPE = "ReCaptchaMobileTaskProxyLess"
+RECAPTCHA_MOBILE_TYPE = "ReCaptchaMobileTask"
 HCAPTCHA_TYPE = "HCaptchaTask"
 HCAPTCHA_PROXYLESS_TYPE = "HCaptchaTaskProxyless"
 HCAPTCHA_ENTERPRISE_TYPE = "HCaptchaEnterpriseTask"
@@ -174,7 +175,9 @@ class NextCaptchaAPI:
             task["proxyPassword"] = proxy_password
         return self.api._send(task)
 
-    def recaptcha_mobile(self, app_key: str, app_package_name: str = "", app_action: str = "") -> dict:
+    def recaptcha_mobile(self, app_key: str, app_package_name: str = "", app_action: str = "", proxy_type: str = "",
+                         proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "",
+                         proxy_password: str = "") -> dict:
         """
         Solve Mobile reCAPTCHA challenge.
 
@@ -184,11 +187,18 @@ class NextCaptchaAPI:
         :return: A dictionary containing the solution of the Mobile reCAPTCHA.
         """
         task = {
-            "type": RECAPTCHA_MOBILE_TYPE,
+            "type": RECAPTCHA_MOBILE_PROXYLESS_TYPE,
             "appKey": app_key,
             "appPackageName": app_package_name,
             "appAction": app_action,
         }
+        if proxy_address != "":
+            task["type"] = RECAPTCHA_MOBILE_TYPE
+            task["proxyType"] = proxy_type
+            task["proxyAddress"] = proxy_address
+            task["proxyPort"] = proxy_port
+            task["proxyLogin"] = proxy_login
+            task["proxyPassword"] = proxy_password
         return self.api._send(task)
 
     def hcaptcha(self, website_url: str, website_key: str, is_invisible: bool = False, enterprise_payload: dict = {},
