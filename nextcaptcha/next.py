@@ -3,6 +3,7 @@ import time
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 import requests
+import urllib3
 
 logging.basicConfig(level=logging.INFO)
 
@@ -40,13 +41,11 @@ class ApiClient:
         self.open_log = open_log
         self.session = requests.session()
 
-
-        adapter = HTTPAdapter(pool_connections=1000, pool_maxsize=1000)
-        retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
+        adapter = HTTPAdapter(pool_maxsize=1000)
         self.session.mount('http://', adapter)
         self.session.mount('https://', adapter)
-        self.session.mount('http://', HTTPAdapter(max_retries=retries))
-        self.session.mount('https://', HTTPAdapter(max_retries=retries))
+
+        urllib3.disable_warnings()
 
     def _get_balance(self) -> str:
         resp = self.session.post(url=self.HOST + "/getBalance", json={"clientKey": self.client_key})
@@ -99,7 +98,6 @@ class ApiClient:
                     logging.error(f"Task {task_id} failed {resp.json()}")
                 return resp.json()
             time.sleep(0.5)
-
 
 
 class NextCaptchaAPI:
