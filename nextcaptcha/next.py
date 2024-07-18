@@ -82,12 +82,15 @@ class ApiClient:
             if self.open_log:
                 logging.info(f"Task status: {status}")
             if status == READY_STATUS:
-                logging.info(f"Task {task_id} ready {resp.json()}")
+                if self.open_log:
+                    logging.info(f"Task {task_id} ready {resp.json()}")
                 return resp.json()
             if status == FAILED_STATUS:
-                logging.error(f"Task {task_id} failed {resp.json()}")
+                if self.open_log:
+                    logging.error(f"Task {task_id} failed {resp.json()}")
                 return resp.json()
-            time.sleep(1)
+            time.sleep(0.5)
+
 
 
 class NextCaptchaAPI:
