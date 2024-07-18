@@ -1,6 +1,7 @@
 import logging
 import time
-
+from urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
 import requests
 
 logging.basicConfig(level=logging.INFO)
@@ -38,6 +39,14 @@ class ApiClient:
         self.callback_url = callback_url
         self.open_log = open_log
         self.session = requests.session()
+
+
+        adapter = HTTPAdapter(pool_connections=1000, pool_maxsize=1000)
+        retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
+        self.session.mount('http://', adapter)
+        self.session.mount('https://', adapter)
+        self.session.mount('http://', HTTPAdapter(max_retries=retries))
+        self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
     def _get_balance(self) -> str:
         resp = self.session.post(url=self.HOST + "/getBalance", json={"clientKey": self.client_key})
