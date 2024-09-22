@@ -60,7 +60,7 @@ class ApiClient:
     def _send(self, task: dict) -> dict:
         data = {
             "clientKey": self.client_key,
-            "solftId": self.solft_id,
+            "softId": self.solft_id,
             "callbackUrl": self.callback_url,
             "task": task,
         }
@@ -187,7 +187,7 @@ class NextCaptchaAPI:
 
     def recaptcha_mobile(self, app_key: str, app_package_name: str = "", app_action: str = "", proxy_type: str = "",
                          proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "",
-                         proxy_password: str = "") -> dict:
+                         proxy_password: str = "", app_device: str = "ios") -> dict:
         """
         Solve Mobile reCAPTCHA challenge.
 
@@ -201,6 +201,7 @@ class NextCaptchaAPI:
             "appKey": app_key,
             "appPackageName": app_package_name,
             "appAction": app_action,
+            "appDevice": app_device,
         }
         if proxy_address != "":
             task["type"] = RECAPTCHA_MOBILE_TYPE
