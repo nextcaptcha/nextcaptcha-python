@@ -130,7 +130,7 @@ class NextCaptchaAPI:
         return self.api._send(task)
 
     def recaptchav2enterprise(self, website_url: str, website_key: str, enterprise_payload: dict = {},
-                              is_invisible: bool = False, api_domain: str = "", page_action: str = "") -> dict:
+                              is_invisible: bool = False, api_domain: str = "", page_action: str = "", website_info: str = "") -> dict:
         """
         Solve reCAPTCHA v2 Enterprise challenge.
 
@@ -149,6 +149,7 @@ class NextCaptchaAPI:
             "isInvisible": is_invisible,
             "apiDomain": api_domain,
             "pageAction": page_action,
+            "websiteInfo": website_info,
         }
         return self.api._send(task)
 
