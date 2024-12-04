@@ -67,12 +67,6 @@ To solve hCaptcha Enterprise challenges, use the hcaptcha_enterprise method:
 result = api.hcaptcha_enterprise(website_url="https://example.com", website_key="SITE_KEY")
 ```
 
-Solving FunCaptcha
-To solve FunCaptcha challenges, use the funcaptcha method:
-
-```python
-result = api.funcaptcha(website_public_key="WEBSITE_PUBLIC_KEY")
-```
 
 Checking Account Balance
 To check your NextCaptcha account balance, use the get_balance method:

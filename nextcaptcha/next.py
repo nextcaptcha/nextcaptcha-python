@@ -9,15 +9,15 @@ logging.basicConfig(level=logging.INFO)
 
 RECAPTCHAV2_TYPE = "RecaptchaV2TaskProxyless"
 RECAPTCHAV2_ENTERPRISE_TYPE = "RecaptchaV2EnterpriseTaskProxyless"
+RECAPTCHAV2HS_ENTERPRISE_TYPE = "RecaptchaV2HSEnterpriseTaskProxyless"
 RECAPTCHAV3_PROXYLESS_TYPE = "RecaptchaV3TaskProxyless"
+RECAPTCHAV3HS_PROXYLESS_TYPE = "RecaptchaV3HSTaskProxyless"
 RECAPTCHAV3_TYPE = "RecaptchaV3Task"
 RECAPTCHA_MOBILE_PROXYLESS_TYPE = "ReCaptchaMobileTaskProxyLess"
 RECAPTCHA_MOBILE_TYPE = "ReCaptchaMobileTask"
 HCAPTCHA_TYPE = "HCaptchaTask"
 HCAPTCHA_PROXYLESS_TYPE = "HCaptchaTaskProxyless"
 HCAPTCHA_ENTERPRISE_TYPE = "HCaptchaEnterpriseTask"
-FUNCAPTCHA_TYPE = "FunCaptchaTask"
-FUNCAPTCHA_PROXYLESS_TYPE = "FunCaptchaTaskProxyless"
 
 TIMEOUT = 45
 
@@ -107,7 +107,8 @@ class NextCaptchaAPI:
         self.api = ApiClient(client_key=client_key, solft_id=solft_id, callback_url=callback_url, open_log=open_log)
 
     def recaptchav2(self, website_url: str, website_key: str, recaptcha_data_s_value: str = "",
-                    is_invisible: bool = False, api_domain: str = "", page_action: str = "") -> dict:
+                    is_invisible: bool = False, api_domain: str = "", page_action: str = "",
+                    website_info: str = "") -> dict:
         """
         Solve reCAPTCHA v2 challenge.
 
@@ -126,11 +127,13 @@ class NextCaptchaAPI:
             "isInvisible": is_invisible,
             "apiDomain": api_domain,
             "pageAction": page_action,
+            "websiteInfo": website_info
         }
         return self.api._send(task)
 
     def recaptchav2enterprise(self, website_url: str, website_key: str, enterprise_payload: dict = {},
-                              is_invisible: bool = False, api_domain: str = "", page_action: str = "") -> dict:
+                              is_invisible: bool = False, api_domain: str = "", page_action: str = "",
+                              website_info: str = "") -> dict:
         """
         Solve reCAPTCHA v2 Enterprise challenge.
 
@@ -149,12 +152,40 @@ class NextCaptchaAPI:
             "isInvisible": is_invisible,
             "apiDomain": api_domain,
             "pageAction": page_action,
+            "websiteInfo": website_info
+
+        }
+        return self.api._send(task)
+
+    def recaptchav2hs_enterprise(self, website_url: str, website_key: str, enterprise_payload: dict = {},
+                                 is_invisible: bool = False, api_domain: str = "", page_action: str = "",
+                                 website_info: str = "") -> dict:
+        """
+        Solve reCAPTCHA v2 Enterprise challenge.
+
+        :param website_url: The URL of the website where the reCAPTCHA is located.
+        :param website_key: The sitekey of the reCAPTCHA.
+        :param enterprise_payload: Optional. Additional enterprise payload parameters.
+        :param is_invisible: Optional. Whether the reCAPTCHA is invisible or not.
+        :param api_domain: Optional. The domain of the reCAPTCHA API if different from the default.
+        :return: A dictionary containing the solution of the reCAPTCHA.
+        """
+        task = {
+            "type": RECAPTCHAV2HS_ENTERPRISE_TYPE,
+            "websiteURL": website_url,
+            "websiteKey": website_key,
+            "enterprisePayload": enterprise_payload,
+            "isInvisible": is_invisible,
+            "apiDomain": api_domain,
+            "pageAction": page_action,
+            "websiteInfo": website_info
+
         }
         return self.api._send(task)
 
     def recaptchav3(self, website_url: str, website_key: str, page_action: str = "", api_domain: str = "",
                     proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "",
-                    proxy_password: str = "") -> dict:
+                    proxy_password: str = "", website_info: str = "") -> dict:
         """
         Solve reCAPTCHA v3 challenge.
 
@@ -175,6 +206,8 @@ class NextCaptchaAPI:
             "websiteKey": website_key,
             "pageAction": page_action,
             "apiDomain": api_domain,
+            "websiteInfo": website_info
+
         }
         if proxy_address:
             task["type"] = RECAPTCHAV3_TYPE
@@ -183,6 +216,33 @@ class NextCaptchaAPI:
             task["proxyPort"] = proxy_port
             task["proxyLogin"] = proxy_login
             task["proxyPassword"] = proxy_password
+        return self.api._send(task)
+
+    def recaptchav3hs(self, website_url: str, website_key: str, page_action: str = "", api_domain: str = "",
+                      website_info: str = "") -> dict:
+        """
+        Solve reCAPTCHA v3 challenge.
+
+        :param website_url: The URL of the website where the reCAPTCHA is located.
+        :param website_key: The sitekey of the reCAPTCHA.
+        :param page_action: Optional. The action parameter to use for the reCAPTCHA.
+        :param api_domain: Optional. The domain of the reCAPTCHA API if different from the default.
+        :param proxy_type: Optional. The type of the proxy (HTTP, HTTPS, SOCKS4, SOCKS5).
+        :param proxy_address: Optional. The address of the proxy.
+        :param proxy_port: Optional. The port of the proxy.
+        :param proxy_login: Optional. The login for the proxy.
+        :param proxy_password: Optional. The password for the proxy.
+        :return: A dictionary containing the solution of the reCAPTCHA.
+        """
+        task = {
+            "type": RECAPTCHAV3HS_PROXYLESS_TYPE,
+            "websiteURL": website_url,
+            "websiteKey": website_key,
+            "pageAction": page_action,
+            "apiDomain": api_domain,
+            "websiteInfo": website_info
+
+        }
         return self.api._send(task)
 
     def recaptcha_mobile(self, app_key: str, app_package_name: str = "", app_action: str = "", proxy_type: str = "",
@@ -274,37 +334,6 @@ class NextCaptchaAPI:
             "proxyLogin": proxy_login,
             "proxyPassword": proxy_password,
         }
-        return self.api._send(task)
-
-    def funcaptcha(self, website_public_key: str, website_url: str = "", data: str = "", proxy_type: str = "",
-                   proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "",
-                   proxy_password: str = "") -> dict:
-        """
-        Solve FunCaptcha challenge.
-
-        :param website_public_key: The public key of the FunCaptcha.
-        :param website_url: Optional. The URL of the website where the FunCaptcha is located.
-        :param data: Optional. Additional data to be sent with the task.
-        :param proxy_type: Optional. The type of the proxy (HTTP, HTTPS, SOCKS4, SOCKS5).
-        :param proxy_address: Optional. The address of the proxy.
-        :param proxy_port: Optional. The port of the proxy.
-        :param proxy_login: Optional. The login for the proxy.
-        :param proxy_password: Optional. The password for the proxy.
-        :return: A dictionary containing the solution of the FunCaptcha.
-        """
-        task = {
-            "type": FUNCAPTCHA_PROXYLESS_TYPE,
-            "websiteURL": website_url,
-            "websitePublicKey": website_public_key,
-            "data": data,
-        }
-        if proxy_address:
-            task["type"] = FUNCAPTCHA_TYPE
-            task["proxyType"] = proxy_type
-            task["proxyAddress"] = proxy_address
-            task["proxyPort"] = proxy_port
-            task["proxyLogin"] = proxy_login
-            task["proxyPassword"] = proxy_password
         return self.api._send(task)
 
     def get_balance(self) -> str:
