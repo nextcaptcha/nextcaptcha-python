@@ -18,6 +18,8 @@ RECAPTCHA_MOBILE_TYPE = "ReCaptchaMobileTask"
 HCAPTCHA_TYPE = "HCaptchaTask"
 HCAPTCHA_PROXYLESS_TYPE = "HCaptchaTaskProxyless"
 HCAPTCHA_ENTERPRISE_TYPE = "HCaptchaEnterpriseTask"
+TURNSTILE_TYPE = "TurnstileTask"
+TURNSTILE_PROXYLESS_TYPE = "TurnstileTaskProxyless"
 
 TIMEOUT = 45
 
@@ -334,6 +336,44 @@ class NextCaptchaAPI:
             "proxyLogin": proxy_login,
             "proxyPassword": proxy_password,
         }
+        return self.api._send(task)
+
+    def turnstile(self, website_url: str, website_key: str, action: str = "", data: str = "", pagedata: str = "",
+                  proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "",
+                  proxy_password: str = "") -> dict:
+        """
+        Solve Cloudflare Turnstile challenge.
+
+        :param website_url: The URL of the website where the Turnstile is located.
+        :param website_key: The sitekey of the Turnstile.
+        :param action: Optional. The value of the action parameter of the turnstile.render call.
+        :param data: Optional. The value of the cData parameter of the turnstile.render call.
+        :param pagedata: Optional. The value of the chlPageData parameter of the turnstile.render call.
+        :param proxy_type: Optional. The type of the proxy (HTTP, SOCKS4, SOCKS5).
+        :param proxy_address: Optional. The address of the proxy.
+        :param proxy_port: Optional. The port of the proxy.
+        :param proxy_login: Optional. The login for the proxy.
+        :param proxy_password: Optional. The password for the proxy.
+        :return: A dictionary containing the solution of the Turnstile.
+        """
+        task = {
+            "type": TURNSTILE_PROXYLESS_TYPE,
+            "websiteURL": website_url,
+            "websiteKey": website_key,
+        }
+        if action:
+            task["action"] = action
+        if data:
+            task["data"] = data
+        if pagedata:
+            task["pagedata"] = pagedata
+        if proxy_address:
+            task["type"] = TURNSTILE_TYPE
+            task["proxyType"] = proxy_type
+            task["proxyAddress"] = proxy_address
+            task["proxyPort"] = proxy_port
+            task["proxyLogin"] = proxy_login
+            task["proxyPassword"] = proxy_password
         return self.api._send(task)
 
     def get_balance(self) -> str:

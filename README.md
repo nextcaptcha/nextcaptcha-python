@@ -1,6 +1,6 @@
 # NextCaptcha Python SDK
 NextCaptcha is a powerful captcha solving service that supports various types of captchas including reCAPTCHA v2,
-reCAPTCHA v2 Enterprise, reCAPTCHA v3, reCAPTCHA Mobile, hCaptcha, and FunCaptcha. With NextCaptcha, you can easily
+reCAPTCHA v2 Enterprise, reCAPTCHA v3, reCAPTCHA Mobile, and Cloudflare Turnstile. With NextCaptcha, you can easily
 solve a variety of captcha challenges in your automation scripts and programs.
 
 This SDK provides a simple and easy-to-use Python interface for interacting with the NextCaptcha API. It supports all
@@ -53,20 +53,12 @@ To solve reCAPTCHA Mobile challenges, use the recaptcha_mobile method:
 result = api.recaptcha_mobile(app_key="APP_KEY")
 ```
 
-Solving hCaptcha
-To solve hCaptcha challenges, use the hcaptcha method:
+Solving Cloudflare Turnstile
+To solve Cloudflare Turnstile challenges, use the turnstile method:
 
 ```python
-result = api.hcaptcha(website_url="https://example.com", website_key="SITE_KEY")
+result = api.turnstile(website_url="https://example.com", website_key="SITE_KEY")
 ```
-
-Solving hCaptcha Enterprise
-To solve hCaptcha Enterprise challenges, use the hcaptcha_enterprise method:
-
-```python
-result = api.hcaptcha_enterprise(website_url="https://example.com", website_key="SITE_KEY")
-```
-
 
 Checking Account Balance
 To check your NextCaptcha account balance, use the get_balance method:
@@ -91,7 +83,7 @@ result = api.recaptchav2(website_url=WEBSITE_URL, website_key=WEBSITE_KEY)
 if result["status"] == "ready":
     print(f"reCAPTCHA solved: {result['solution']}")
 else:
-    print(f"Failed to solve reCAPTCHA: {result['error']}")
+    print(f"Failed to solve reCAPTCHA: {result['errorDescription']}")
 ```
 
 ## Error Handling
