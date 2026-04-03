@@ -339,7 +339,8 @@ class NextCaptchaAPI:
         return self.api._send(task)
 
     def turnstile(self, website_url: str, website_key: str, action: str = "", data: str = "", pagedata: str = "",
-                  proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0, proxy_login: str = "",
+                  htmlPageBase64:str = "",proxy_type: str = "", proxy_address: str = "", proxy_port: int = 0,
+                  proxy_login: str = "",
                   proxy_password: str = "") -> dict:
         """
         Solve Cloudflare Turnstile challenge.
@@ -362,11 +363,13 @@ class NextCaptchaAPI:
             "websiteKey": website_key,
         }
         if action:
-            task["action"] = action
+            task["pageAction"] = action
         if data:
             task["data"] = data
         if pagedata:
             task["pagedata"] = pagedata
+        if htmlPageBase64:
+            task["htmlPageBase64"] = htmlPageBase64
         if proxy_address:
             task["type"] = TURNSTILE_TYPE
             task["proxyType"] = proxy_type
